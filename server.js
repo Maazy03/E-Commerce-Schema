@@ -15,7 +15,7 @@ connectDB();
 
 
 //ROUTE FILES
-const bootcamps = require('./routes/devcamp')
+const products = require('./routes/products')
 
 
 
@@ -25,19 +25,18 @@ const app = express()
 app.use(express.json())
 
 
-
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'))
 }
 
 // app.use(logger)
 
-app.use('/api/v1/bootcamps', bootcamps)
+app.use('/api/v1/bootcamps', products)
 
 
 app.use(errorHandler)
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5001
 const server=app.listen(PORT, () => {
     console.log(`server on ${process.env.NODE_ENV} on port ${PORT}`.green.bold)
 
