@@ -6,7 +6,6 @@ const asyncHandler = require('../middleware/async')
 //route /get/api/v1/bootcamps
 
 exports.getProducts = asyncHandler(async (req, res, next) => {
-    console.log("MAJNHU")
     // try {
     const allBootCamps = await Products.find()
     res.status(200).json({
@@ -28,17 +27,18 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
 //@desc get single bootcamps
 //route /get/api/v1/bootcamps/:id
 
-exports.getBootcamp = asyncHandler(async (req, res, next) => {
+exports.getSingleProduct = asyncHandler(async (req, res, next) => {
+    console.log("SINGLE BOOTCAMP",req.params.id)
 
     // try {
-    const singleBootCamps = await Products.findById(req.params.id)
-    if (!singleBootCamps) {
+    const singleProduct = await Products.findById(req.params.id)
+    if (!singleProduct) {
         return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
 
     }
     res.status(200).json({
         sucess: true,
-        data: singleBootCamps
+        data: singleProduct
     })
 
     // } catch (err) {
@@ -56,10 +56,10 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
 exports.createProduct = asyncHandler(async (req, res, next) => {
 
     // try {
-    const newBootCamp = await Products.create(req.body)
+    const createProduct = await Products.create(req.body)
     res.status(201).json({
         sucess: true,
-        data: newBootCamp
+        data: createProduct
     })
     console.log("BOOT CAMP SUCESS")
 
@@ -79,18 +79,18 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
 //@desc update bootcamps
 //route /put/api/v1/bootcamps/:id
 
-exports.updateBootcamp = asyncHandler(async (req, res, next) => {
+exports.updateProduct = asyncHandler(async (req, res, next) => {
     // try {
-    const updateBootCamps = await Products.findByIdAndUpdate(req.params.id, req.body, {
+    const updateProduct = await Products.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true,
     })
-    if (!updateBootCamps) {
+    if (!updateProduct) {
         return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
     }
     res.status(200).json({
         sucess: true,
-        data: updateBootCamps
+        data: updateProduct
     })
 
     // } 
@@ -109,14 +109,15 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 //@desc update bootcamps
 //route /put/api/v1/bootcamps/:id
 
-exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
+exports.deleteSingleProduct = asyncHandler(async (req, res, next) => {
     // try {
-    const deleteBootCamps = await Products.findByIdAndDelete(req.params.id)
-    if (!deleteBootCamps) {
+    const deleteProduct = await Products.findByIdAndDelete(req.params.id)
+    if (!deleteProduct) {
         return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
     }
     res.status(200).json({
         sucess: true,
+        message:`${req.params.id} is succesfully deleted`,
         data: {}
     })
 

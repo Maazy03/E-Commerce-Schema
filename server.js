@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // app.use(logger)
 
-app.use('/api/v1/bootcamps', products)
+app.use('/ecomm', products)
 
 
 app.use(errorHandler)
