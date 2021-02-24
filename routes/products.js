@@ -11,6 +11,7 @@ const app = express()
 
 // app.use('./api/v1/bootcamps',bootcamps)
 
+
 //PRODUCT APIS
 router.route('/Products').get(getProducts)
 router.route('/AddProduct').post(createProduct)
