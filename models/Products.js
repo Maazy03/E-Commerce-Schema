@@ -28,7 +28,10 @@ const ProductsSchema = new mongoose.Schema({
         type: String,
         default: 'no-photo.jpeg'
     },
-    
+    address: [{ 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Address"
+     }]
     // },
     // averageRating: {
     //     type: Number,
