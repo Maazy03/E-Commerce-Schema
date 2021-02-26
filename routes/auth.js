@@ -3,15 +3,19 @@ const express = require('express')
 
 const router = express.Router()
  
- 
+ //Protected Route intialization
+const { protect } = require('../middleware/auth')
+
+
  //USER CONTROLLER
- const { registerUser,loginUser } = require('../controller/Auth')
+ const { registerUser,loginUser,getLoggedInUser } = require('../controller/Auth')
 
  const app = express()
 
 
  router.route('/Signup').post(registerUser)
  router.route('/Login').post(loginUser)
+ router.route('/LoggedIn').get(protect,getLoggedInUser)
  // router.route('/User/:id').get(getUser)
 
  module.exports=router

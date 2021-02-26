@@ -9,13 +9,14 @@ const asyncHandler = require('../middleware/async')
 
 exports.registerUser = asyncHandler(async (req, res, next) => {
     console.log("REGISTER BODY", req.body)
-    const { username, email, password } = req.body
+    const { username, email, password,role } = req.body
     console.log("BEFORE", password)
 
     const user = await User.create({
         username,
         email,
-        password
+        password,
+        role
     })
     const token = user.getSignedJwtToken()
 
@@ -27,49 +28,11 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
 
 
 
-    // bcrypt.hash(req.body.password, 10, function (error, hashedPass) {
-    //     if (error) {
-    //         res.json({
-    //             error: err
-    //         })
-    //     }
-
-    //     let user = new User({
-    //         username: req.body.username,
-    //         email: req.body.email,
-    //         password: hashedPass
-
-    //     })
-
-
-    //     // user.save()
-    //     //     .then(user => {
-    //     //         console.log("SUCESS", user)
-    //     //         res.status(201).json({
-    //     //             data: user,
-    //     //             message: "USER ADDED SUCCESSFULLY"
-    //     //         })
-    //     //     })
-    //     //     .catch(err => {
-    //     //         console.log("ERR", err)
-    //     //         next(err)
-
-    //     //         // res.json({
-    //     //         //     message: "USER NOT ADDED"
-    //     //         // })
-    //     //     })
-    // }
-
-
-    // )
-
-
-
 }//async
 
 )//register
 
-
+//LOGIN CONTROLLER
 exports.loginUser = asyncHandler(async (req, res, next) => {
     console.log("LOGIN BODY", req.body)
 
@@ -80,7 +43,7 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse('Please provide and email or password'), 400)
     }
 
-    const user = await User.findOne({ email:email })
+    const user = await User.findOne({ email: email })
     console.log("USER 1", user)
 
     if (!user) {
@@ -93,56 +56,56 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse('Incorrect Password'), 401)
     }
 
-    const token = user.getSignedJwtToken()
+    // const token = user.getSignedJwtToken()
 
+    // res.status(200).json({
+    //     sucess: true,
+    //     token: token,
+    //     data: user
+    // })
+
+    sendTokenResponse(user, 200, res)
+
+})
+
+
+//Get token from model, create cookie and send response
+const sendTokenResponse = (user, statusCode, res) => {
+    const token = user.getSignedJwtToken();
+    console.log("WAS",token)
+    const options = {
+        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 3600 * 1000),
+        httpOnly:true
+    }
+
+    if(process.env.NODE_ENV === 'production')
+    {
+        options.secure=true
+    }
+
+    res
+        .status(statusCode)
+        .cookie('token', token, options)
+        .json({
+            sucess: true,
+            token,
+            data:user
+        })
+}
+
+//Get logged in user data
+exports.getLoggedInUser= asyncHandler(async (req, res, next) => {
+
+
+    console.log("GET LOGGED IN USER", req.user)
+
+    const user= await User.findById(req.user._id)
+   
     res.status(200).json({
         sucess: true,
-        token: token,
         data: user
     })
 
 
-    // User.findOne({ $or: [{ email: email }, { phone: email }] })
-    //     .then(user => {
-    //         if (user) {
-    //             bcrypt.compare(password, user.password, function (err, result) {
-    //                 if (err) {
-    //                     console.log("SHIKWA ERR", err)
-    //                     res.json({
-    //                         error: err
-    //                     })
-    //                     console.log("EREN 22", err)
-    //                     res.json({
-    //                         message: "password not matched"
-    //                     })
-
-
-    //                 }//if err
-    //                 if (result) {
-    //                     console.log("SUCESS TEUW", result)
-    //                     let token = jwt.sign({ email: user.email }, 'verySecretValue', { expiresIn: '48h' })
-    //                     res.status(201).json({
-    //                         token: token,
-    //                         message: "LOGGED IN SUCCESSFULLY"
-    //                     })
-    //                 }
-    //                 else {
-    //                     console.log("EREN fgvb", err)
-    //                     res.status(404).json({
-    //                         message: "password not matched"
-    //                     })
-
-    //                     // next(err)
-    //                 }
-    //             })
-
-    //             return user
-    //         }
-    //     })
-
-    //     .catch(err => {
-    //         console.log("errrr", err)
-
-    //     })
 
 })

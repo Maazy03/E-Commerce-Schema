@@ -1,5 +1,6 @@
 const express = require('express')
 const dotenv = require('dotenv')
+const cookieParser = require('cookie-parser')
 const errorHandler=require('./middleware/error')
 dotenv.config({ path: './config/config.env' })
 
@@ -35,6 +36,8 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/ecomm', products)
 app.use('/ecomm/auth', auth)
 
+//Cookie Parser
+app.use(cookieParser())
 
 app.use(errorHandler)
 

@@ -3,10 +3,13 @@ const express = require('express')
 
 const router = express.Router()
 
+
+//Protected Route intialization
+const { protect,authorize } = require('../middleware/auth')
+
 //PRODUCTS CONTROLLER
 const { getProducts, createProduct, getSingleProduct, deleteSingleProduct, updateProduct } =
  require('../controller/Products')
-
 
 
 // const bootcamps= require('./routes/devcamp')
@@ -19,8 +22,8 @@ const app = express()
 
 //PRODUCT APIS
 router.route('/Products').get(getProducts)
-router.route('/AddProduct').post(createProduct)
-router.route('/Product/:id').get(getSingleProduct).delete(deleteSingleProduct).put(updateProduct)
+router.route('/AddProduct').post(protect,authorize('vendor'),createProduct)
+router.route('/Product/:id').get(protect,getSingleProduct).delete(protect,deleteSingleProduct).put(protect,updateProduct)
 
 
 

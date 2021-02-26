@@ -32,12 +32,12 @@ const UserSchema = new mongoose.Schema({
     type:Date,
     default:Date.now
   },
-  // role:{
-  //   type:String,
-  //   enum:['user','vendor'],
-  //   default:'user'
+  role:{
+    type:String,
+    enum:['user','vendor'],
+    // default:'user'
 
-  // }
+  }
 
 }) 
 
@@ -58,5 +58,9 @@ UserSchema.methods.comparePassword=async function(enteredPassword)
 {
   return await bcrypt.compare(enteredPassword,this.password)
 }
+
+ 
+
+
 
 module.exports = mongoose.model('User', UserSchema)
