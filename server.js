@@ -16,6 +16,7 @@ connectDB();
 
 //ROUTE FILES
 const products = require('./routes/products')
+const auth = require('./routes/auth')
 
 
 
@@ -32,6 +33,7 @@ if (process.env.NODE_ENV === 'development') {
 // app.use(logger)
 
 app.use('/ecomm', products)
+app.use('/ecomm/auth', auth)
 
 
 app.use(errorHandler)

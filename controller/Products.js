@@ -1,5 +1,5 @@
 const Products = require('../models/Products')
-const Address = require('../models/SingleProduct')
+const Address = require('../models/User')
 const ErrorResponse = require('../utils/errorResponse')
 const asyncHandler = require('../middleware/async')
 
@@ -7,8 +7,17 @@ const asyncHandler = require('../middleware/async')
 //route /get/api/v1/bootcamps
 
 exports.getProducts = asyncHandler(async (req, res, next) => {
+
+    let query
+    const reqQuery = { ...query }
+
+    const remFields = ['select', 'sort', 'page', 'limit']
+    remFields.forEach(param => delete reqQuery[param])
+
+    let quertStr=JSON.stringify(reqQuery)
     // try {
-    const allBootCamps = await Products.find()
+    const allBootCamps = await Products.find(req.query)
+    console.log("query", req.query)
     res.status(200).json({
         sucess: true,
         data: allBootCamps
@@ -32,7 +41,7 @@ exports.getSingleProduct = asyncHandler(async (req, res, next) => {
     console.log("SINGLE BOOTCAMP", req.params.id)
 
     // try {
-    const singleProduct = await Products.findOne({_id:req.params.id})
+    const singleProduct = await Products.findOne({ _id: req.params.id })
         .populate('address')
         .exec(function (err, res) {
             if (err)
@@ -48,7 +57,7 @@ exports.getSingleProduct = asyncHandler(async (req, res, next) => {
         data: singleProduct
     })
 
- 
+
 
 })
 
@@ -138,49 +147,3 @@ exports.deleteSingleProduct = asyncHandler(async (req, res, next) => {
 
 
 
-exports.createProduct01 = asyncHandler(async (req, res, next) => {
-
-    // try {
-    console.log("saas",req.body)
-    const createProduct = await Address.create(req.body)
-    res.status(201).json({
-        sucess: true,
-        data: createProduct
-    })
-    console.log("BOOT CAMP SUCESS")
-
-    // } catch (err) {
-    //     console.log("BOOT CAMP FAIL",err.message)
-    //     // res.status(400).json({
-    //     //     sucess:false,
-    //     //     data:'',
-    //     //     error:error.message
-    //     // })
-    //     next(err)
-
-    // }
-
-})
-exports.getProduct01 = asyncHandler(async (req, res, next) => {
-
-    // try {
-    console.log("saas")
-    const createProduct = await Address.find()
-    res.status(201).json({
-        sucess: true,
-        data: createProduct
-    })
-    console.log("BOOT CAMP SUCESS")
-
-    // } catch (err) {
-    //     console.log("BOOT CAMP FAIL",err.message)
-    //     // res.status(400).json({
-    //     //     sucess:false,
-    //     //     data:'',
-    //     //     error:error.message
-    //     // })
-    //     next(err)
-
-    // }
-
-})
