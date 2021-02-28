@@ -31,7 +31,12 @@ const ProductsSchema = new mongoose.Schema({
     address: [{ 
         type: mongoose.Schema.Types.ObjectId,
         ref: "Address"
-     }]
+     }],
+     user:{
+         type:mongoose.Schema.ObjectId,
+         ref:'User',
+         required:true
+     }
     // },
     // averageRating: {
     //     type: Number,

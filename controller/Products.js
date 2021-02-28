@@ -14,7 +14,7 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
     const remFields = ['select', 'sort', 'page', 'limit']
     remFields.forEach(param => delete reqQuery[param])
 
-    let quertStr=JSON.stringify(reqQuery)
+    let quertStr = JSON.stringify(reqQuery)
     // try {
     const allBootCamps = await Products.find(req.query)
     console.log("query", req.query)
@@ -66,8 +66,12 @@ exports.getSingleProduct = asyncHandler(async (req, res, next) => {
 
 exports.createProduct = asyncHandler(async (req, res, next) => {
 
+    console.log("USER 011", req.user)
+    req.body.user = req.user.id
+    console.log("USER 011qq", req.body.user)
+    console.log("USER 011www", req.body)
     // try {
-    const createProduct = await Products.create(req.body)
+    const createProduct = await (await Products.create(req.body)).populate('')
     res.status(201).json({
         sucess: true,
         data: createProduct
@@ -92,28 +96,28 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
 
 exports.updateProduct = asyncHandler(async (req, res, next) => {
     // try {
-    const updateProduct = await Products.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true,
-    })
+    let updateProduct = await Products.findById(req.params.id)
+
     if (!updateProduct) {
         return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
     }
+    //Make sure the right owner is updating it's bootcamp
+    console.log("BOOT CAMP IPD DUSEr", updateProduct.user, req.user.id)
+
+    if (updateProduct.user.toString() !== req.user.id) {
+        return next(new ErrorResponse(`${req.user.id} is not authroized person to update this task`, 401))
+
+    }
+    updateProduct = await Products.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true
+    })
+
     res.status(200).json({
         sucess: true,
         data: updateProduct
     })
 
-    // } 
-    // catch (err) {
-    //     console.log("UPDATE ERROR",err.message)
-    //     // res.status(404).json({
-    //     //     sucess:false,
-    //     //     error:err.message
-    //     // })
-    //     next(err)
-
-    // }
 
 })
 
@@ -122,10 +126,22 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
 
 exports.deleteSingleProduct = asyncHandler(async (req, res, next) => {
     // try {
-    const deleteProduct = await Products.findByIdAndDelete(req.params.id)
+    let deleteProduct = await Products.findById(req.params.id)
+
+    console.log("BOOT CAMP DEL", deleteProduct.user, req.user.id)
+
+
     if (!deleteProduct) {
         return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
     }
+
+    if (deleteProduct.user.toString() !== req.user.id) {
+        return next(new ErrorResponse(`${req.user.id} is not auhtorized to delete this`, 401))
+    }
+
+    deleteProduct = await Products.findByIdAndDelete(req.params.id)
+
+    deleteProduct.remove()
     res.status(200).json({
         sucess: true,
         message: `${req.params.id} is succesfully deleted`,
