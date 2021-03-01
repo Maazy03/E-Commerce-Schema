@@ -8,6 +8,32 @@ const asyncHandler = require('../middleware/async')
 
 
 
+exports.getallUsers = asyncHandler(async (req, res, next) => {
+
+    // let query
+    // const reqQuery = { ...query }
+
+    // const remFields = ['select', 'sort', 'page', 'limit']
+    // remFields.forEach(param => delete reqQuery[param])
+
+    // let quertStr = JSON.stringify(reqQuery)
+    // try {
+    const allBootCamps = await User.find().populate('products')
+    // console.log("query", req.query)
+    res.status(200).json({
+        sucess: true,
+        data: allBootCamps
+    })
+
+    //     } catch (err) {
+    //         res.status(404).json({
+    //             sucess:false,
+    //             error:err.message
+    //         })
+    //     }
+
+    //     // res.status(200).json({ sucess: true,message:"SUCCESFULLY ALL",hello:req.hello })
+})
 
 exports.registerUser = asyncHandler(async (req, res, next) => {
     console.log("REGISTER BODY", req.body)
@@ -18,7 +44,8 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
         username,
         email,
         password,
-        role
+        role,
+        products
     })
     const token = user.getSignedJwtToken()
 
@@ -138,7 +165,6 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 })
 
 
-
 //Update user details
 exports.updateUserDetails = asyncHandler(async (req, res, next) => {
     console.log("mmmmmm", req.user)
@@ -197,7 +223,7 @@ exports.getLoggedInUser = asyncHandler(async (req, res, next) => {
 
     console.log("GET LOGGED IN USER", req.user)
 
-    const user = await User.findById(req.user._id)
+    const user = await User.findById(req.user._id).poupulate('Products')
 
     res.status(200).json({
         sucess: true,

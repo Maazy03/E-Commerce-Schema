@@ -2,7 +2,7 @@ const Products = require('../models/Products')
 const Address = require('../models/User')
 const ErrorResponse = require('../utils/errorResponse')
 const asyncHandler = require('../middleware/async')
-
+const User=require('../models/User')
 //@desc get all bootcamps
 //route /get/api/v1/bootcamps
 
@@ -16,7 +16,7 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
 
     let quertStr = JSON.stringify(reqQuery)
     // try {
-    const allBootCamps = await Products.find(req.query)
+    const allBootCamps = await Products.find(req.query).populate('user')
     console.log("query", req.query)
     res.status(200).json({
         sucess: true,
@@ -42,7 +42,7 @@ exports.getSingleProduct = asyncHandler(async (req, res, next) => {
 
     // try {
     const singleProduct = await Products.findOne({ _id: req.params.id })
-        .populate('address')
+        // .populate('address')
         .exec(function (err, res) {
             if (err)
                 throw err
@@ -61,33 +61,60 @@ exports.getSingleProduct = asyncHandler(async (req, res, next) => {
 
 })
 
+exports.getSingleVendorProducts = asyncHandler(async (req, res, next) => {
+    console.log("SINGLE BOOTCAMP", req.user._id)
+
+    // try {
+    const singleVendorProducts = await Products.find({user:req.user._id})
+
+    console.log("SSSSSSSS",singleVendorProducts)
+    // next(new ErrorResponse(` is not valid`, 400))
+    //     .populate('address')
+    //     .exec(function (err, res) {
+    //         if (err)
+    //             throw err
+    //         console.log("KI", res)
+    //     })
+    if (!singleVendorProducts) {
+        return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
+
+    }
+    res.status(200).json({
+        sucess: true,
+        data: singleVendorProducts
+    })
+
+
+
+})
+
 //@desc post single bootcamps
 //route /get/api/v1/bootcamps
 
-exports.createProduct = asyncHandler(async (req, res, next) => {
+exports.createProduct = asyncHandler(async (req, res, next) => { 
 
     console.log("USER 011", req.user)
-    req.body.user = req.user.id
+    // req.body.user = req.user.id
     console.log("USER 011qq", req.body.user)
     console.log("USER 011www", req.body)
+    const user = await User.findOne({ _id: req.user.id })
+    req.body.user = user._id;
+    console.log("user._id",user)
     // try {
-    const createProduct = await (await Products.create(req.body)).populate('')
+    const createProduct = new Products(req.body)
+    // let nProduct=await Products.create(createProduct) 
+    const ssavedProduct = await createProduct.save();
+    let chec= await Products.populate(ssavedProduct, 'user')
+    // const newvar=await nProduct.populate("user")
+    // const quer=await (await Products.findById('603bf686052e0f36e0a11893')).populated('user')
+    console.log('populated -->',ssavedProduct)
+    // console.log('populated 2-->',quer)
     res.status(201).json({
         sucess: true,
-        data: createProduct
+        data: ssavedProduct
     })
     console.log("BOOT CAMP SUCESS")
 
-    // } catch (err) {
-    //     console.log("BOOT CAMP FAIL",err.message)
-    //     // res.status(400).json({
-    //     //     sucess:false,
-    //     //     data:'',
-    //     //     error:error.message
-    //     // })
-    //     next(err)
-
-    // }
 
 })
 

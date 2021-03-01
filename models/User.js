@@ -38,6 +38,12 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'vendor'],
     // default:'user'
 
+  },
+  products:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'Products',
+    required:true
+
   }
 
 })
