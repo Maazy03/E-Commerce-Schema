@@ -40,13 +40,14 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
     const { username, email, password, role } = req.body
     // console.log("BEFORE", password)
 
-    const user = await User.create({
-        username,
-        email,
-        password,
-        role,
-        products
-    })
+        const user = await User.create({
+            username,
+            email,
+            password,
+            role,
+
+        })
+
     const token = user.getSignedJwtToken()
 
     res.status(200).json({
@@ -223,7 +224,7 @@ exports.getLoggedInUser = asyncHandler(async (req, res, next) => {
 
     console.log("GET LOGGED IN USER", req.user)
 
-    const user = await User.findById(req.user._id).poupulate('Products')
+    const user = await User.findById(req.user._id).poupulate('products')
 
     res.status(200).json({
         sucess: true,

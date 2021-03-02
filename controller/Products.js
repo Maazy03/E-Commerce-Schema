@@ -16,7 +16,7 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
 
     let quertStr = JSON.stringify(reqQuery)
     // try {
-    const allBootCamps = await Products.find(req.query).populate('user')
+    const allBootCamps = await Products.find(req.query).populate('user','email username role')
     console.log("query", req.query)
     res.status(200).json({
         sucess: true,
@@ -65,16 +65,10 @@ exports.getSingleVendorProducts = asyncHandler(async (req, res, next) => {
     console.log("SINGLE BOOTCAMP", req.user._id)
 
     // try {
-    const singleVendorProducts = await Products.find({user:req.user._id})
+    const singleVendorProducts = await Products.find({user:req.user._id}).populate('user username email role')
 
     console.log("SSSSSSSS",singleVendorProducts)
-    // next(new ErrorResponse(` is not valid`, 400))
-    //     .populate('address')
-    //     .exec(function (err, res) {
-    //         if (err)
-    //             throw err
-    //         console.log("KI", res)
-    //     })
+
     if (!singleVendorProducts) {
         return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
 
@@ -94,19 +88,20 @@ exports.getSingleVendorProducts = asyncHandler(async (req, res, next) => {
 exports.createProduct = asyncHandler(async (req, res, next) => { 
 
     console.log("USER 011", req.user)
-    // req.body.user = req.user.id
     console.log("USER 011qq", req.body.user)
-    console.log("USER 011www", req.body)
-    const user = await User.findOne({ _id: req.user.id })
+
+    let user = await User.findOne({ _id: req.user.id })
     req.body.user = user._id;
     console.log("user._id",user)
-    // try {
+
     const createProduct = new Products(req.body)
-    // let nProduct=await Products.create(createProduct) 
     const ssavedProduct = await createProduct.save();
+    console.log("ssaved product",ssavedProduct)
+    user.products.push(ssavedProduct._id)
+    await user.save()
+
     let chec= await Products.populate(ssavedProduct, 'user')
-    // const newvar=await nProduct.populate("user")
-    // const quer=await (await Products.findById('603bf686052e0f36e0a11893')).populated('user')
+  
     console.log('populated -->',ssavedProduct)
     // console.log('populated 2-->',quer)
     res.status(201).json({
@@ -125,6 +120,7 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
     // try {
     let updateProduct = await Products.findById(req.params.id)
 
+    console.log("ASASasdasd",updateProduct)
     if (!updateProduct) {
         return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
     }

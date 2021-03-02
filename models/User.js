@@ -39,12 +39,19 @@ const UserSchema = new mongoose.Schema({
     // default:'user'
 
   },
-  products:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:'Products',
-    required:true
+  products: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Products'
 
-  }
+  }],
+  orders: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Orders'
+
+    }
+  ]
+
 
 })
 
