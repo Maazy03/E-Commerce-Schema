@@ -18,7 +18,7 @@ connectDB();
 //ROUTE FILES
 const products = require('./routes/products')
 const auth = require('./routes/auth')
-const orders = require('./routes/order')
+const orders = require('./routes/Order')
 
 
 
