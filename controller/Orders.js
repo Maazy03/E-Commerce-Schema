@@ -21,12 +21,9 @@ exports.placeOrder = asyncHandler(async (req, res, next) => {
         req.body.user = user._id;
         console.log("user._id",user)
         console.log("req.body.user",  req.body.user)
-      
         const createOrders = new Orders(req.body)   
-        const savedOrder = await createOrders.save();
-
+        const savedOrder = await createOrders.save()
         let chec= await Orders.populate(savedOrder, 'user')
-   
         console.log('populated -->',savedOrder)
     
     
