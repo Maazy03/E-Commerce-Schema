@@ -1,4 +1,6 @@
 const User = require('../models/User')
+const Orders = require('../models/Orders')
+// const Products = require('../models/Products')
 const crypto = require('crypto')
 const bcrypt = require("bcryptjs")
 const sendEmail = require('../utils/sendEmail')
@@ -8,45 +10,19 @@ const asyncHandler = require('../middleware/async')
 
 
 
-exports.getallUsers = asyncHandler(async (req, res, next) => {
-
-    // let query
-    // const reqQuery = { ...query }
-
-    // const remFields = ['select', 'sort', 'page', 'limit']
-    // remFields.forEach(param => delete reqQuery[param])
-
-    // let quertStr = JSON.stringify(reqQuery)
-    // try {
-    const allBootCamps = await User.find().populate('products')
-    // console.log("query", req.query)
-    res.status(200).json({
-        sucess: true,
-        data: allBootCamps
-    })
-
-    //     } catch (err) {
-    //         res.status(404).json({
-    //             sucess:false,
-    //             error:err.message
-    //         })
-    //     }
-
-    //     // res.status(200).json({ sucess: true,message:"SUCCESFULLY ALL",hello:req.hello })
-})
 
 exports.registerUser = asyncHandler(async (req, res, next) => {
     console.log("REGISTER BODY", req.body)
     const { username, email, password, role } = req.body
     // console.log("BEFORE", password)
 
-        const user = await User.create({
-            username,
-            email,
-            password,
-            role,
+    const user = await User.create({
+        username,
+        email,
+        password,
+        role,
 
-        })
+    })
 
     const token = user.getSignedJwtToken()
 
@@ -259,3 +235,61 @@ const sendTokenResponse = (user, statusCode, res) => {
             data: user
         })
 }
+
+
+//ADMIN OPERATIONS
+//GET ALL AUTHS INCLUDING USERS AND VENDORS
+
+
+exports.getallUsers = asyncHandler(async (req, res, next) => {
+
+    console.log("req all users", req.user.role)
+    const allBootCamps = await User.find().populate('products')
+
+    res.status(200).json({
+        sucess: true,
+        data: allBootCamps
+    })
+
+})
+
+
+//DELETING AUTH
+
+
+exports.deleteSingleProduct = asyncHandler(async (req, res, next) => {
+
+
+    console.log("dsdsdssdsdasdasdasdasdas", req.params.id)
+    console.log("dsdsdssdsdasdasdasdasdas 3", req.user)
+    let deleteUser = await User.findById(req.params.id)
+    console.log("dsdsdssdsdasdasdasdasdas 22222", deleteUser)
+
+    console.log("USER DEL", deleteUser._id, req.params.id)
+
+
+    if (!deleteUser) {
+        return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
+    }
+
+    if (deleteUser._id.toString() !== req.params.id) {
+        return next(new ErrorResponse(`${req.user.id} not found`, 401))
+    }
+    if(deleteUser._id.toString() === req.params.id)
+    { 
+        let orderstoDel =await Orders.findOneAndDelete({user:req.params.id})
+        console.log("ORDERS TBD",orderstoDel)
+
+    }
+    deleteUser = await User.findByIdAndDelete(req.params.id)
+    deleteUser.remove()
+
+    res.status(200).json({
+        sucess: true,
+        message: `${req.params.id} is succesfully deleted`,
+
+    })
+
+
+
+})

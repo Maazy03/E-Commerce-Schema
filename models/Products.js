@@ -16,9 +16,6 @@ const ProductsSchema = new mongoose.Schema({
     ratings:{
         type:Number,
     },
-    stock:{
-        type:Number,
-    },
     description: {
         type: String,
         required: [true, 'Please add a description'],
@@ -28,10 +25,10 @@ const ProductsSchema = new mongoose.Schema({
         type: String,
         default: 'no-photo.jpeg'
     },
-    address: [{ 
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Address"
-     }],
+    // address: [{ 
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Address"
+    //  }],
      user:{
          type:mongoose.Schema.Types.ObjectId,
          ref:'User',
@@ -45,13 +42,7 @@ const ProductsSchema = new mongoose.Schema({
     // },
     
 })
-//Creating Slug
-// ProductsSchema.pre('save', function (next) {
-//     console.log("SLugifyran", this.name)
-//     this.slug = slugify(this.name, { lower: true })
-//     next()
-// })
-//GeoCode & create Location field
+
 
 
 // const res = geocoder.geocode('29 champs elysée paris');

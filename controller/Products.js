@@ -41,13 +41,15 @@ exports.getSingleProduct = asyncHandler(async (req, res, next) => {
     console.log("SINGLE BOOTCAMP", req.params.id)
 
     // try {
-    const singleProduct = await Products.findOne({ _id: req.params.id })
+    const singleProduct = await Products.findById(req.params.id )
+
         // .populate('address')
-        .exec(function (err, res) {
-            if (err)
-                throw err
-            console.log("KI", res)
-        })
+        // .exec(function (err, res) {
+        //     if (err)
+        //         throw err
+        //     console.log("KI", res)
+        // })
+        console.log("SINGL PRDASADS",singleProduct)
     if (!singleProduct) {
         return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
 
@@ -57,15 +59,13 @@ exports.getSingleProduct = asyncHandler(async (req, res, next) => {
         data: singleProduct
     })
 
-
-
 })
 
 exports.getSingleVendorProducts = asyncHandler(async (req, res, next) => {
     console.log("SINGLE BOOTCAMP", req.user._id)
 
     // try {
-    const singleVendorProducts = await Products.find({user:req.user._id}).populate('user username email role')
+    const singleVendorProducts = await Products.find({user:req.user._id}).select('-products').populate('user','username email')
 
     console.log("SSSSSSSS",singleVendorProducts)
 
@@ -100,7 +100,7 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
     user.products.push(ssavedProduct._id)
     await user.save()
 
-    let chec= await Products.populate(ssavedProduct, 'user')
+    // let chec= await Products.populate(ssavedProduct, 'user')
   
     console.log('populated -->',ssavedProduct)
     // console.log('populated 2-->',quer)
@@ -148,7 +148,7 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
 //route /put/api/v1/bootcamps/:id
 
 exports.deleteSingleProduct = asyncHandler(async (req, res, next) => {
-    // try {
+
     let deleteProduct = await Products.findById(req.params.id)
 
     console.log("BOOT CAMP DEL", deleteProduct.user, req.user.id)
@@ -165,6 +165,7 @@ exports.deleteSingleProduct = asyncHandler(async (req, res, next) => {
     deleteProduct = await Products.findByIdAndDelete(req.params.id)
 
     deleteProduct.remove()
+
     res.status(200).json({
         sucess: true,
         message: `${req.params.id} is succesfully deleted`,

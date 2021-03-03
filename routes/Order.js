@@ -20,8 +20,8 @@ const app = express()
 
 
 //PRODUCT APIS
-router.route('/createOrder').post(protect,authorize('user'),placeOrder)
-router.route('/Order').get(protect,authorize('user'),getOrdersofSingleUser)
+router.route('/createOrder').post(protect,authorize('purchaser'),placeOrder)
+router.route('/Order').get(protect,authorize('purchaser'),getOrdersofSingleUser)
 // router.route('/Products').get(getProducts)
 // router.route('/Product/:id').get(protect,getSingleProduct).delete(protect,deleteSingleProduct).put(protect,updateProduct)
 // router.route('/vendorProducts').get(protect,getSingleVendorProducts)
