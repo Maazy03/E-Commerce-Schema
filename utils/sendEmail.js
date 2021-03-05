@@ -28,4 +28,4 @@ console.log("Message sent: %s", info.messageId);
 
 }
 
-module.exports=sendEmail 
+module.exports=sendEmail

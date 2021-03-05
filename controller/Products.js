@@ -1,8 +1,8 @@
 const Products = require('../models/Products')
-const Address = require('../models/User')
+const Users = require('../models/User')
 const ErrorResponse = require('../utils/errorResponse')
 const asyncHandler = require('../middleware/async')
-const User=require('../models/User')
+const User = require('../models/User')
 //@desc get all bootcamps
 //route /get/api/v1/bootcamps
 
@@ -10,13 +10,12 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
 
     let query
     const reqQuery = { ...query }
-
     const remFields = ['select', 'sort', 'page', 'limit']
     remFields.forEach(param => delete reqQuery[param])
 
     let quertStr = JSON.stringify(reqQuery)
     // try {
-    const allBootCamps = await Products.find(req.query).populate('user','email username role')
+    const allBootCamps = await Products.find(req.query).populate('user', 'email username role')
     console.log("query", req.query)
     res.status(200).json({
         sucess: true,
@@ -41,15 +40,15 @@ exports.getSingleProduct = asyncHandler(async (req, res, next) => {
     console.log("SINGLE BOOTCAMP", req.params.id)
 
     // try {
-    const singleProduct = await Products.findById(req.params.id )
+    const singleProduct = await Products.findById(req.params.id)
 
-        // .populate('address')
-        // .exec(function (err, res) {
-        //     if (err)
-        //         throw err
-        //     console.log("KI", res)
-        // })
-        console.log("SINGL PRDASADS",singleProduct)
+    // .populate('address')
+    // .exec(function (err, res) {
+    //     if (err)
+    //         throw err
+    //     console.log("KI", res)
+    // })
+    console.log("SINGL PRDASADS", singleProduct)
     if (!singleProduct) {
         return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
 
@@ -65,9 +64,9 @@ exports.getSingleVendorProducts = asyncHandler(async (req, res, next) => {
     console.log("SINGLE BOOTCAMP", req.user._id)
 
     // try {
-    const singleVendorProducts = await Products.find({user:req.user._id}).select('-products').populate('user','username email')
+    const singleVendorProducts = await Products.find({ user: req.user._id }).select('-products').populate('user', 'username email')
 
-    console.log("SSSSSSSS",singleVendorProducts)
+    console.log("SSSSSSSS", singleVendorProducts)
 
     if (!singleVendorProducts) {
         return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
@@ -85,24 +84,24 @@ exports.getSingleVendorProducts = asyncHandler(async (req, res, next) => {
 //@desc post single bootcamps
 //route /get/api/v1/bootcamps
 
-exports.createProduct = asyncHandler(async (req, res, next) => { 
+exports.createProduct = asyncHandler(async (req, res, next) => {
 
     console.log("USER 011", req.user)
     console.log("USER 011qq", req.body.user)
 
     let user = await User.findOne({ _id: req.user.id })
     req.body.user = user._id;
-    console.log("user._id",user)
+    console.log("user._id", user)
 
     const createProduct = new Products(req.body)
     const ssavedProduct = await createProduct.save();
-    console.log("ssaved product",ssavedProduct)
+    console.log("ssaved product", ssavedProduct)
     user.products.push(ssavedProduct._id)
     await user.save()
 
     // let chec= await Products.populate(ssavedProduct, 'user')
-  
-    console.log('populated -->',ssavedProduct)
+
+    console.log('populated -->', ssavedProduct)
     // console.log('populated 2-->',quer)
     res.status(201).json({
         sucess: true,
@@ -120,7 +119,7 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
     // try {
     let updateProduct = await Products.findById(req.params.id)
 
-    console.log("ASASasdasd",updateProduct)
+    console.log("ASASasdasd", updateProduct)
     if (!updateProduct) {
         return next(new ErrorResponse(`${req.params.id} is not valid`, 400))
     }
@@ -150,7 +149,15 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
 exports.deleteSingleProduct = asyncHandler(async (req, res, next) => {
 
     let deleteProduct = await Products.findById(req.params.id)
+    let deletedUSer = await Users.findById(req.user.id)
+    console.log("ACCESS --::", deletedUSer.products)
 
+    if (deletedUSer.products === req.user.id) {
+        deletedUSer.products.filter()
+    }
+    deletedUSer.products.filter(req.user.id)
+    console.log("DELTE PRODCUT", deleteProduct)
+    console.log("DELTE user", deletedUSer)
     console.log("BOOT CAMP DEL", deleteProduct.user, req.user.id)
 
 
@@ -162,9 +169,11 @@ exports.deleteSingleProduct = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse(`${req.user.id} is not auhtorized to delete this`, 401))
     }
 
-    deleteProduct = await Products.findByIdAndDelete(req.params.id)
 
-    deleteProduct.remove()
+
+    // deleteProduct = await Products.findByIdAndDelete(req.params.id)
+
+    // deleteProduct.remove()
 
     res.status(200).json({
         sucess: true,
