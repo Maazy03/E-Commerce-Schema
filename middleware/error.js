@@ -3,7 +3,7 @@ const ErrorResponse = require('../utils/errorResponse')
 const errorHandler = (err, req, res, next) => {
     let error = { ...err }
     error.message = err.message
-    console.log("jas2", err)
+    console.log("jas2", err,req.user)
     console.log("jas", error)
     console.log("EHn", err.name, err.value)
     console.log("EH2", error.name, error.value, error.statusCode)

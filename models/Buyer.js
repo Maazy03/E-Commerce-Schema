@@ -27,25 +27,24 @@ const BuyerSchema = new mongoose.Schema({
         required: [true, 'Please add a password'],
         minlength: [6, 'Password length is small']
     },
-
     role: {
         type: String,
         enum: ['vendor', 'buyer'],
         default: 'buyer'
 
     },
+    orders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Orders'
+
+      }
+    ]
     //   products: [{
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'Products'
 
     //   }],
-    //   orders: [
-    //     {
-    //       type: mongoose.Schema.Types.ObjectId,
-    //       ref: 'Orders'
-
-    //     }
-    //   ]
 
 
 })

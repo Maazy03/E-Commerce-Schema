@@ -5,7 +5,7 @@ const router = express.Router()
 
 
 //Protected Route intialization
-const { protect, authorize } = require('../middleware/auth')
+const { protect2, authorize } = require('../middleware/auth')
 
 //ORDERS CONTROLLER
 const { placeOrder, getOrdersofSingleUser } = require('../controller/Orders')
@@ -22,8 +22,8 @@ const app = express()
 //PRODUCT APIS
 
 
-router.post('/placeOrder', protect, authorize('purchaser'), function (req, res) {
-
+router.post('/placeOrder', protect2,authorize('buyer'),function (req, res) {
+console.log("ARHA",req.user)
     placeOrder(req).then((response) => {
         res.status(201).json({
             responseCode: 200,
@@ -51,7 +51,7 @@ router.post('/placeOrder', protect, authorize('purchaser'), function (req, res) 
 })
 
 
-router.get('/Order',protect,function(req,res){
+router.get('/Order',protect2,authorize('buyer'),function(req,res){
     getOrdersofSingleUser(req).then((response) => {
         res.status(200).json({
             responseCode: 200,
@@ -61,9 +61,9 @@ router.get('/Order',protect,function(req,res){
     })
         .catch((error) => {
             console.log("NA", error)
-            res.status(error.status).json({
+            res.status(404).json({
                 responseCode: error.status,
-                responseMessage: message,
+                responseMessage: error,
                 result: {}
             })
         })
