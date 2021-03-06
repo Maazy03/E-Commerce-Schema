@@ -19,7 +19,7 @@ connectDB();
 const products = require('./routes/products')
 const auth = require('./routes/auth')
 const orders = require('./routes/Order')
-
+const buyer = require('./routes/Buyer')
 
 
 const app = express()
@@ -37,6 +37,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/ecomm', products)
 app.use('/ecomm/auth', auth)
 app.use('/ecomm/orders', orders)
+app.use('/ecomm/users', buyer)
 
 //Cookie Parser
 app.use(cookieParser())

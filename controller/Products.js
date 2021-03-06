@@ -1,4 +1,5 @@
 const Products = require('../models/Products')
+const Buyer = require('../models/Buyer')
 const Users = require('../models/User')
 const ErrorResponse = require('../utils/errorResponse')
 const asyncHandler = require('../middleware/async')
@@ -87,10 +88,16 @@ exports.getSingleVendorProducts = asyncHandler(async (req, res, next) => {
 exports.createProduct = asyncHandler(async (req, res, next) => {
     try {
 
-        console.log("USER 011", req.user)
+        console.log("USER 011", req.body)
         console.log("USER 011qq", req.body.user)
 
+        // const buyer = new Buyer(req.body.name)
+        // console.log("t1", buyer)
+        // const savedBuyer = await buyer.save()
+        // console.log("t1", savedBuyer)
+
         let user = await User.findOne({ _id: req.user.id })
+
         req.body.user = user._id;
         console.log("user._id", user)
 
@@ -135,7 +142,7 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
             new: true,
             runValidators: true
         })
-        
+
         return updateProduct
     }
 
