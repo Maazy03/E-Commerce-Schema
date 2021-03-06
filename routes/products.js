@@ -19,7 +19,7 @@ const app = express()
 //PRODUCT APIS
 
 //ADDING A PRODUCT
-router.post('/AddProduct', protect, function (req, res) {
+router.post('/AddProduct', protect, authorize('vendor'), function (req, res) {
 
     createProduct(req).then((response) => {
         console.log("TRY ADD PRODUCT", response)
@@ -72,7 +72,7 @@ router.get('/Products', function (req, res) {
 
 
 //GET SINGLE PRODUCT
-router.get('/Product/:id', protect, function (req, res) {
+router.get('/Product/:id', protect,authorize('vendor'), function (req, res) {
     getSingleProduct(req).then((response) => {
         console.log("TRT", response)
         res.status(200).json({
@@ -93,7 +93,7 @@ router.get('/Product/:id', protect, function (req, res) {
 
 
 //DELETING SINGLE PRODUCT
-router.delete('/Product/:id', protect, function (req, res) {
+router.delete('/Product/:id', protect, authorize('vendor'),function (req, res) {
     deleteSingleProduct(req).then((response) => {
         // console.log("TRT", response)
         res.status(200).json({
@@ -113,7 +113,7 @@ router.delete('/Product/:id', protect, function (req, res) {
 })
 
 //DELETING SINGLE PRODUCT
-router.put('/Product/:id', protect, function (req, res) {
+router.put('/Product/:id', protect,authorize('vendor'), function (req, res) {
     updateProduct(req).then((response) => {
         console.log("TRT", response)
         res.status(200).json({
@@ -135,7 +135,7 @@ router.put('/Product/:id', protect, function (req, res) {
 
 
 
-router.get('/vendorProducts', protect, function (req, res) {
+router.get('/vendorProducts', protect,authorize('vendor'), function (req, res) {
     getSingleVendorProducts(req).then((response) => {
         console.log("TRT", response)
         res.status(200).json({
