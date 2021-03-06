@@ -34,12 +34,12 @@ const BuyerSchema = new mongoose.Schema({
 
     },
     orders: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Orders'
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Orders'
 
-      }
-    ]
+        }
+    ],
     //   products: [{
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'Products'

@@ -13,19 +13,21 @@ exports.placeOrder = async (req, res, next) => {
 
     try {
 
-        console.log("CREATE ORDER 011", req.body.user)
+        // console.log("CREATE ORDER 011", req.body.user)
+        console.log("CREATE ORDER 011", req.body)
         console.log("CREATE ORDER 011AA", req.user)
 
-        let buyer = await Buyer.findOne({ _id: req.user.id })
-        req.body.user = buyer._id;
+        let buyer = await Buyer.findOne({ _id: req.user._id })
+        console.log("BUYER O 1",buyer)
+        req.body.buyer = buyer._id;
         console.log("nuyer._id", buyer)
-        console.log("req.body.user", req.body.user)
+        console.log("req.body.user", req.body)
         const createOrders = new Orders(req.body)
         const savedOrder = await createOrders.save()
-        // let chec = await Orders.populate(savedOrder, 'user')
+        console.log('populated -->', savedOrder)
+        // let chec = await Orders.populate(savedOrder, 'buyer')
         buyer.orders.push(savedOrder._id)
         await buyer.save()
-        console.log('populated -->', savedOrder)
         // const createOrder = await (await Orders.create(req.body)).populate('user')
         return savedOrder
 

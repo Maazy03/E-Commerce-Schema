@@ -112,7 +112,7 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
         console.log('populated -->', savedProduct)
         // console.log('populated 2-->',quer)
         return savedProduct
-        console.log("BOOT CAMP SUCESS")
+        // console.log("BOOT CAMP SUCESS")
     }
     catch (err) {
         throw (err)

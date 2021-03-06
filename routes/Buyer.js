@@ -70,6 +70,32 @@ router.post('/Login', function (req, res) {
     })
 })
 
+router.post('/buyerOrders', function (req, res) {
+    loginBuyer(req).then((response) => {
+        console.log("LOGIN TRY", response)
+
+        res.status(200).send(
+            {
+                responseCode: 200,
+                responseMessage: "success",
+                result: response
+            }
+        )
+
+
+    }).catch((err) => {
+        console.log("LOGIN CATCH", err)
+        res.status(400).send(
+            {
+                responseCode: 400,
+                responseMessage: err,
+                result: {}
+            }
+        )
+
+    })
+})
+
 
 
 

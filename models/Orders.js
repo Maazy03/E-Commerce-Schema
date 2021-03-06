@@ -18,22 +18,38 @@ const OrderSchema = new mongoose.Schema({
             default: 'no-photo.jpeg'
         },
     }],
-    address: {
-        type: String,
-        required: true
-    },
-    city: {
-        type: String,
-        required: true
-    },
     paymentMethod: {
         type: String,
         enum: ['COD', 'Debit Card']
     },
-    user: {
+    shippingAddress: {
+        contact: {
+            type: String,
+        },
+        country: {
+            type: String,
+        },
+        region: {
+            type: String,
+        },
+        city: {
+            type: String,
+        },
+        area: {
+            type: String,
+        },
+        address: {
+            type: String,
+        },
+
+    },
+    buyer: {
         type: mongoose.Schema.ObjectId,
-        ref: 'User',
-        required: true
+        ref: 'Buyer',
+        // required: true
+    },
+    user:{
+
     }
 
 

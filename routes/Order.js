@@ -33,10 +33,10 @@ console.log("ARHA",req.user)
     })
         .catch((error) => {
             let message
-            if (err.name === "ValidationError") {
+            if (error.name === "ValidationError") {
                 console.log("object")
                 console.log("No", Object.values(error.errors))
-                message = Object.values(err.errors).map(val => val.message)
+                message = Object.values(error.errors).map(val => val.message)
             }
             console.log("NA", error)
             res.status(error.status).json({

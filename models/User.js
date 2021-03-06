@@ -51,6 +51,19 @@ const UserSchema = new mongoose.Schema({
 
     }
   ]
+  ,
+  shopDetails:[{
+    shopName:String,
+    // shopCreated:Date.now,
+    shopAddress:{
+      address:String,
+      city:String,
+      town:String,
+      country:String,
+      region:String
+    },
+    
+  }]
 
 
 })
