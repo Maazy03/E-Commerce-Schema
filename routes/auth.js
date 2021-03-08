@@ -9,7 +9,7 @@ const { protect, authorize } = require('../middleware/auth')
 
 //USER CONTROLLER
 const { registerUser, loginUser, getLoggedInUser, forgetPassword,
-   resetPassword, updateUserDetails, updatePassword, getallUsers, deleteSingleProduct } = require('../controller/Auth')
+   resetPassword, updateUserDetails, updatePassword, getallUsers, deleteSingleProduct,getOrders } = require('../controller/Auth')
 
 const app = express()
 
@@ -205,6 +205,33 @@ router.put('/updatePassword', protect, function (req, res) {
 
 })
 
+
+router.get('/fetchOrders', protect, function (req, res) {
+
+   getOrders(req).then((response) => {
+      console.log("FETCH ORDERS TRY", response)
+      res.status(200).send(
+         {
+            responseCode: 200,
+            responseMessage: "success",
+            result: response
+         }
+      )
+
+   })
+      .catch((err) => {
+         console.log("FETCH ORDERS CATCH", err)
+         res.status(400).send(
+            {
+               responseCode: 400,
+               responseMessage: err,
+               result: {}
+            }
+         )
+
+
+      })
+})
 
 
 module.exports = router

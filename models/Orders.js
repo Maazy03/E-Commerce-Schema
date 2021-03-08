@@ -17,6 +17,11 @@ const OrderSchema = new mongoose.Schema({
             type: String,
             default: 'no-photo.jpeg'
         },
+        product:{
+            type: mongoose.Schema.ObjectId,
+            ref: 'Products',
+        }
+        
     }],
     paymentMethod: {
         type: String,
@@ -48,9 +53,7 @@ const OrderSchema = new mongoose.Schema({
         ref: 'Buyer',
         // required: true
     },
-    user:{
-
-    }
+  
 
 
 })

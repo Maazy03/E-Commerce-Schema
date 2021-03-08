@@ -29,7 +29,6 @@ const BuyerSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['vendor', 'buyer'],
         default: 'buyer'
 
     },
@@ -40,11 +39,17 @@ const BuyerSchema = new mongoose.Schema({
 
         }
     ],
-    //   products: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Products'
+    products: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Products'
 
-    //   }],
+    }],
+    // user: [
+    //     {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: 'User'
+    //     }
+    // ]
 
 
 })

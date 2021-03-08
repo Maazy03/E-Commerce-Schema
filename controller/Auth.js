@@ -236,7 +236,7 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
         user.password = req.body.newPassword
         await user.save()
 
-    
+
 
         const respon = sendTokenResponse(user, 200, res)
         console.log("asddasasdasdsadasdasdasd", respon)
@@ -253,21 +253,46 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 
 
 //Get logged in user data
-exports.getLoggedInUser = asyncHandler(async (req, res, next) => {
+exports.getOrders = async (req, res, next) => {
+
+    try {
 
 
-    console.log("GET LOGGED IN USER", req.user)
-
-    const user = await User.findById(req.user._id).poupulate('products')
-
-    res.status(200).json({
-        sucess: true,
-        data: user
-    })
+        console.log("GET LOGGED IN USER", req.user)
+          
+        const opts = [{ path: 'orderItems',  select: 'name cost photo' }];
 
 
+        const user = await User.findById(req.user._id).select('-_id username email') 
+        // .populate('orders','-_id -_v shippingAddress paymentMethod orderItems buyer')
+        .populate({
+            path: 'orders',
+            select:'-_id shippingAddress paymentMethod orderItems' ,
+            populate: {
+              path: 'buyer',
+              model: 'Buyer',
+              select:'name email'
+            }
+          });
 
-})
+        // .populate('orders',[{ path: 'orderItems',  select: 'name cost photo' }])
+
+
+        console.log("USER====",user)
+        // res.status(200).json({
+        //     sucess: true,
+        //     data: user
+        // })
+
+        return user
+    }
+
+    catch (err) {
+        throw err
+    }
+
+
+}
 
 
 

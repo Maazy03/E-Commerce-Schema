@@ -26,6 +26,9 @@ exports.registerBuyer = async (req, res, next) => {
             data: buyer
         }
         return registerBuyer
+    
+    
+    
     }
     catch (e) {
         throw e

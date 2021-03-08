@@ -35,7 +35,7 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['vendor','purchaser'],
+    // enum: ['vendor','purchaser'],
     default:'vendor'
 
   },
@@ -45,13 +45,11 @@ const UserSchema = new mongoose.Schema({
 
   }],
   orders: [
-    {
+    { 
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Orders'
-
     }
-  ]
-  ,
+  ],
   shopDetails:[{
     shopName:String,
     // shopCreated:Date.now,
