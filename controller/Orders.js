@@ -11,6 +11,7 @@ const User = require('../models/User')
 //route /get/api/v1/bootcamps
 
 exports.placeOrder = async (req, res, next) => {
+
     try {
 
         // console.log("CREATE ORDER 011", req.body.user)
@@ -45,7 +46,7 @@ exports.placeOrder = async (req, res, next) => {
          })
         // let chec = await Orders.populate(savedOrder, 'buyer')
         buyer.orders.push(savedOrder._id)
-        // let id ="6043869e729064165c8c145d"
+        await buyer.save()
         // const createOrder = await (await Orders.create(req.body)).populate('user')
         return savedOrder
 
@@ -61,15 +62,14 @@ exports.getOrdersofSingleUser = async (req, res, next) => {
 
     try {
         console.log("GOFSU", req.user)
-        let buyer = await Buyer.findById(req.user._id).select('name email')
-            .populate({
-                path:'orders',
-                select:'-_id orderItems shippingAddress',
-                populate:{
-                    path:'product',
-                    model:'Products'
-                }})
-            // .populate('products')
+        let buyer = await Buyer.findById(req.user._id).populate({
+            path:'orders', 
+         populate: {
+            path: 'buyer',
+            model: 'Buyer',
+            select:'name email'
+        }})
+            // .populate('orders','-_id orderItems shippingAddress')
             // .populate('products')
 
 

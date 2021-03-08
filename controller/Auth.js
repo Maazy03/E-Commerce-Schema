@@ -257,28 +257,28 @@ exports.getOrders = async (req, res, next) => {
 
     try {
 
-
         console.log("GET LOGGED IN USER", req.user)
-          
-        const opts = [{ path: 'orderItems',  select: 'name cost photo' }];
+
+        const opts = [{ path: 'orderItems', select: 'name cost photo' }];
 
 
-        const user = await User.findById(req.user._id).select('-_id username email') 
-        // .populate('orders','-_id -_v shippingAddress paymentMethod orderItems buyer')
-        .populate({
-            path: 'orders',
-            select:'-_id shippingAddress paymentMethod orderItems' ,
-            populate: {
-              path: 'buyer',
-              model: 'Buyer',
-              select:'name email'
-            }
-          });
+        const user = await User.findById(req.user._id)
+        // .select('-_id username email')
+        //     // .populate('orders','-_id -_v shippingAddress paymentMethod orderItems buyer')
+            .populate({
+                path: 'orders',
+                select: '-_id shippingAddress paymentMethod orderItems',
+                populate: {
+                    path: 'buyer',
+                    model: 'Buyer',
+                    select: 'name email'
+                }
+            });
 
         // .populate('orders',[{ path: 'orderItems',  select: 'name cost photo' }])
 
 
-        console.log("USER====",user)
+        console.log("USER====", user)
         // res.status(200).json({
         //     sucess: true,
         //     data: user

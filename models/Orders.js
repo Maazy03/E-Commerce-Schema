@@ -53,9 +53,6 @@ const OrderSchema = new mongoose.Schema({
         ref: 'Buyer',
         // required: true
     },
-  
-
-
 })
 
 module.exports = mongoose.model('Orders', OrderSchema)
