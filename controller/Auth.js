@@ -256,7 +256,7 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 exports.getLoggedInUser = asyncHandler(async (req, res, next) => {
 
 
-    console.log("GET LOGGED IN USER", req.user)
+    console.log("GET LOGGED IN   USER", req.user)
 
     const user = await User.findById(req.user._id).poupulate('products')
 
